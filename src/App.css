@@ -38,9 +38,21 @@
   align-items: center;
 }
 .filters{
+  display: block;
   margin-top: 20px;
   float: left;
   margin-left: 40px;
+  width: inherit;
+}
+.stats{
+  display: inline-flex;
+  margin-top: 25px;
+  flex-direction: row;
+  align-items: center;
+}
+.stats>div{
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .card{
   width: 300px;
@@ -102,6 +114,12 @@
   outline: none !important;
   background-color: #fff;
   border-radius: 4px;
+}
+.chart-title{
+  text-align: center;
+  vertical-align: middle;
+  font-family:'Titillium Web',sans-serif;
+  font-weight: bold;
 }
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

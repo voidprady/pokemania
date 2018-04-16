@@ -5,6 +5,7 @@ import logo from './images/logo.png';
 import './App.css';
 import Card from './components/card';
 import Filter from './components/filter';
+import Chart from './components/chart';
 
 WebFont.load({
   google: {
@@ -19,6 +20,10 @@ class App extends Component {
     super(props);
     this.updateData = this.updateData.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
+    this.state = {
+      'selectedType1':'ALL',
+      'selectedType2':'ALL'
+    }
   }
   componentWillMount() {
     var pokemon_csv = require("./pokemons.csv");
@@ -38,7 +43,7 @@ class App extends Component {
   }
   getTypes1(){
     let types = new Set();
-    types.add("-SELECT TYPE1-");
+    types.add("ALL");
     this.state['data'].forEach((obj, index)=>{
       types.add(obj.Type1)
     });
@@ -46,7 +51,7 @@ class App extends Component {
   }
   getTypes2(){
     let types = new Set();
-    types.add("-SELECT TYPE2-");
+    types.add("ALL");
     this.state['data'].forEach((obj, index)=>{
       if (obj.Type1 === this.state.selectedType1) {
         types.add(obj.Type2)
@@ -54,23 +59,36 @@ class App extends Component {
     });
     return types;
   }
-  getmovementTypes(){
-    let types = new Set();
-    this.state['data'].forEach((obj, index)=>{
-      types.add("-SELECT MOVEMENT TYPE-");
-      if (obj.Type1 === this.state.selectedType1 && obj.Type2 === this.state.selectedType2) {
-        types.add(obj.MovementType)
+  getmovementTypeDistribution(filteredData){
+    var movementTypes = new Map();
+    filteredData.forEach((obj, index)=>{
+      if(!movementTypes.has(obj.MovementType)){
+        movementTypes.set(obj.MovementType, 1);
+      }else {
+        movementTypes.set(obj.MovementType, movementTypes.get(obj.MovementType)+1);
       }
-    });
-    return types;
+    })
+    return movementTypes;
   }
-  getAvgCollisionData(){
-    let collisionHead = 0;
-    let filteredData = this.state.data.filter(instance => (instance.Type1 == this.state.selectedType1)&&(instance.Type2 == this.state.selectedType2)&&(instance.MovementType == this.state.selectedMovementType));
+  getAvgCollisionData(filteredData){
+    let collisionData = [0.0, 0.0, 0.0];
 
     filteredData.forEach((obj, index)=>{
-      
+      if (obj['CollisionHeadRadiusM']) {
+        collisionData[0] += parseFloat(obj['CollisionHeadRadiusM'])
+      }
+      if (obj['CollisionHeightM']) {
+        collisionData[1] += parseFloat(obj['CollisionHeightM'])
+      }
+      if (obj['CollisionRadiusM']) {
+        collisionData[2] += parseFloat(obj['CollisionRadiusM'])
+      }
     })
+
+    collisionData.forEach((obj, index) => {
+      obj /= filteredData.length;
+    })
+    return collisionData;
   }
   clickHandler(event){
     if (event.target.id === 'type-1') {
@@ -82,6 +100,13 @@ class App extends Component {
     }
   }
   render() {
+    if (this.state && this.state.data) {
+      var filteredData = this.state.data.filter(instance => (this.state.selectedType1 === 'ALL' || instance.Type1 === this.state.selectedType1)&&(this.state.selectedType2 === 'ALL' || instance.Type2 === this.state.selectedType2));
+      // console.log(filteredData);
+
+      var collisionStats = this.getAvgCollisionData(filteredData);
+      var movementTypeDistribution = this.getmovementTypeDistribution(filteredData);
+    }
     return (
       <div className="App">
         <header className="App-header">
@@ -97,12 +122,14 @@ class App extends Component {
             </div>
             <div className="filters">
               <Filter data = {this.getTypes1()} clickHandler = {this.clickHandler} name={"Type 1"} id={"type-1"}/>
-              <Filter data = {this.state.selectedType1?this.getTypes2():''} clickHandler = {this.clickHandler} name={"Type 2"} id={"type-2"}/>
-              <Filter data = {this.state.selectedType1 && this.state.selectedType2?this.getmovementTypes():''} clickHandler = {this.clickHandler} name={"Movement Type"} id={"movement-type"}/>
+              <Filter data = {this.getTypes2()} clickHandler = {this.clickHandler} name={"Type 2"} id={"type-2"}/>
             </div>
             <div className="stats">
-              <Card data = {getAvgCollisionData()[0]} header={"Collision Radius"}/>
+              <Card data = {[collisionStats[0].toFixed(2)]} header = {"Average Collision Head Radius"} />
+              <Card data = {[collisionStats[1].toFixed(2)]} header = {"Average Collision Height"} />
+              <Card data = {[collisionStats[2].toFixed(2)]} header = {"Average Collision Radius"} />
             </div>
+            <Chart bindId={"pie1"} columns={movementTypeDistribution} chartType={'donut'} header={"Movement Type Distribution"}/>
           </div>
         }
       </div>
