@@ -1,0 +1,109 @@
+/*Import fonts*/
+@font-face {
+  font-family: Pokemon-Hollow;
+  src: url('./fonts/pokemon/Pokemon Hollow.ttf');
+}
+@font-face {
+  font-family: Pokemon-Solid;
+  src: url('./fonts/pokemon/Pokemon Solid.ttf');
+}
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #fff;
+  height: 150px;
+  padding: 20px;
+}
+
+.App-title {
+  font-size: 1.5em;
+  font-family: Pokemon-Solid;
+  letter-spacing: 0.1em;
+  color: black;
+}
+
+.App-intro {
+  font-size: large;
+}
+.toppers{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.filters{
+  margin-top: 20px;
+  float: left;
+  margin-left: 40px;
+}
+.card{
+  width: 300px;
+  height: 145px;
+  margin-left: auto;
+  margin-right: auto;
+  display: inline-block;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)
+}
+.card-title{
+  height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  font-family:'Titillium Web',sans-serif;
+  font-weight: bold;
+  color: white;
+  background-color: #ff0000;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 8px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+.card-body{
+  height: 100px;
+  border-bottom : 2px solid grey;
+  border-left : 2px solid grey;
+  border-right : 2px solid grey;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.card-body>p{
+  font-family: Pokemon-Hollow;
+  font-weight: bolder;
+  font-size: 1.4em;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 15px;
+  letter-spacing: 0.1em;
+
+}
+.filter{
+  margin-left: 20px;
+  display: inline;
+}
+.filter-name{
+  font-family:'Titillium Web',sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1.2em;
+}
+.filt{
+  line-height: 32px !important;
+  padding-left: 12px;
+  cursor: pointer;
+  box-sizing: border-box;
+  height: 34px;
+  border: 1px solid rgba(43, 61, 81, 0.3);
+  outline: none !important;
+  background-color: #fff;
+  border-radius: 4px;
+}
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
